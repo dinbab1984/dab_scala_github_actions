@@ -11,7 +11,6 @@ targets:
     default: true
     
     workspace:
-      host: ${DATABRICKS_HOST}
       root_path: "~/.bundle/${bundle.name}/${bundle.target}"
     
     variables:
@@ -25,7 +24,6 @@ targets:
     mode: production
     
     workspace:
-      host: ${DATABRICKS_HOST}
       root_path: "/.bundle/${bundle.name}/${bundle.target}"
     
     variables:
@@ -39,7 +37,6 @@ targets:
     mode: production
     
     workspace:
-      host: ${DATABRICKS_HOST}
       root_path: "/.bundle/${bundle.name}/${bundle.target}"
     
     variables:
