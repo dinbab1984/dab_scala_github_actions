@@ -4,6 +4,22 @@ version := "0.1.0"
 
 scalaVersion := "2.13.12"
 
+// Enable scalafix
+semanticdbEnabled := true
+semanticdbVersion := scalafixSemanticdb.revision
+
+// Scala compiler options for scalafix
+scalacOptions ++= Seq(
+  "-Wunused:imports",     // Warn about unused imports
+  "-Wunused:patvars",     // Warn about unused pattern variables
+  "-Wunused:privates",    // Warn about unused private definitions
+  "-Wunused:locals",      // Warn about unused local definitions
+  "-Wunused:explicits",   // Warn about unused explicit parameters
+  "-Wunused:implicits",   // Warn about unused implicit parameters
+  "-deprecation",         // Warn about deprecated features
+  "-feature"              // Warn about features that should be imported explicitly
+)
+
 libraryDependencies ++= Seq(
   "org.apache.logging.log4j" % "log4j-api" % "2.20.0",
   "org.apache.logging.log4j" % "log4j-core" % "2.20.0",

@@ -59,7 +59,7 @@ variables:
     # No default - must be set per environment
   volume_name:
     description: "Volume name for artifacts"
-    default: "pipeline"
+    default: "dbxload_worker"
   
   # =========================================
   # Cluster Configuration
@@ -86,7 +86,7 @@ variables:
   
   cluster_policy_id:
     description: "Cluster policy ID"
-    default: "0011ACBB23380934"
+    default: "0001A66A9EAE4E7D"
   
   # =========================================
   # Job Runtime Configuration
