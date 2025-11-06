@@ -65,7 +65,6 @@ resources:
             # Spark configuration
             spark_conf:
               "spark.databricks.delta.preview.enabled": "true"
-              "spark.databricks.cluster.profile": "singleNode"
       
       # Tasks
       tasks:
