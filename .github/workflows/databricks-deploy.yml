@@ -32,7 +32,7 @@ jobs:
         run: |
           mkdir -p ~/.sbt
           echo 'realm=Artifactory Realm' > ~/.sbt/.credentials
-          echo "host=artifacts.ws.contitech.cloud" >> ~/.sbt/.credentials
+          echo "host=${{ secrets.ARTIFACTORY_HOST }}" >> ~/.sbt/.credentials
           echo "user=${{ secrets.ARTIFACTORY_USERNAME }}" >> ~/.sbt/.credentials
           echo "password=${{ secrets.ARTIFACTORY_PASSWORD }}" >> ~/.sbt/.credentials
       
@@ -75,7 +75,7 @@ jobs:
           CATALOG_NAME="ctdp${TARGET}dbxlakehouse"
           echo "TARGET=$TARGET" >> $GITHUB_OUTPUT
           echo "CATALOG_NAME=$CATALOG_NAME" >> $GITHUB_OUTPUT
-          echo "Computed volume path: /Volumes/$CATALOG_NAME/${{ secrets.SCHEMA_NAME_DEV }}/pipeline"
+          echo "Computed volume path: /Volumes/$CATALOG_NAME/${{ secrets.SCHEMA_NAME_DEV }}/dbxload_worker"
       
       - name: Validate bundle for dev
         run: |
@@ -89,8 +89,8 @@ jobs:
       - name: Upload JAR to Databricks Volume
         run: |
           databricks fs cp \
-            target/scala-2.13/dp-lakehouse-dbxjob.jar \
-            dbfs:/Volumes/${{ steps.env_vars.outputs.CATALOG_NAME }}/${{ secrets.SCHEMA_NAME_DEV }}/pipeline/jars/dp-lakehouse-dbxjob-${{ steps.version.outputs.VERSION }}.jar \
+            target/scala-2.13/scala-hello-world.jar \
+            dbfs:/Volumes/${{ steps.env_vars.outputs.CATALOG_NAME }}/${{ secrets.SCHEMA_NAME_DEV }}/dbxload_worker/libs/jars//scala-hello-world_${{ steps.version.outputs.VERSION }}.jar \
             --overwrite
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
@@ -98,10 +98,10 @@ jobs:
       
       - name: Deploy bundle to dev
         run: |
-          databricks bundle deploy -t ${{ steps.env_vars.outputs.TARGET }} \
-            --var="jar_version=${{ steps.version.outputs.VERSION }}"
+          databricks bundle deploy -t ${{ steps.env_vars.outputs.TARGET }}
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
           BUNDLE_VAR_run_as_sp: ${{ secrets.RUN_AS_SP_DEV }}
           BUNDLE_VAR_schema_name: ${{ secrets.SCHEMA_NAME_DEV }}
+          BUNDLE_VAR_jar_version: ${{ steps.version.outputs.VERSION }}
