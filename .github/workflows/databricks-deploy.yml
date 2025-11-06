@@ -100,7 +100,7 @@ jobs:
         run: |
           databricks fs cp \
             target/scala-2.13/scala-hello-world.jar \
-            dbfs:/Volumes/${{ steps.env_vars.outputs.CATALOG_NAME }}/${{ secrets.SCHEMA_NAME_DEV }}/dbxload_worker/libs/jars//scala-hello-world_${{ steps.version.outputs.VERSION }}.jar \
+            dbfs:/Volumes/${{ steps.env_vars.outputs.CATALOG_NAME }}/${{ secrets.SCHEMA_NAME_DEV }}/dbxload_worker/libs/scala-hello-world_${{ steps.version.outputs.VERSION }}.jar \
             --overwrite
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
