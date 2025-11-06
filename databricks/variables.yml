@@ -1,0 +1,146 @@
+# Variables Configuration
+# All bundle variables that can be overridden per environment
+#
+# Environment-specific variables (defaults in targets.yml, can be overridden):
+#   - run_as_sp: Service principal for job runtime (set per target)
+#   - schema_name: Schema name for deployments (set per target)
+#
+# Computed variables (derived from bundle.target):
+#   - catalog_name: ctdp${bundle.target}dbxlakehouse (e.g., ctdpdevdbxlakehouse)
+#   - storage_account_name: ctdp${bundle.target}datastore (e.g., ctdpdevdatastore)
+#
+# Static variables (same across all environments):
+#   - monitoring_queue_name: worker-monitoring
+#   - dbxload_queue_name: worker-dbxload
+#
+# All variables can be overridden via BUNDLE_VAR_<name>=<value> environment variables
+# or passed during deployment with --var="<name>=<value>"
+
+variables:
+  # =========================================
+  # Run as Service Principal Configuration
+  # =========================================
+  # These MUST be provided via environment variables or --var flags
+  
+  run_as_sp:
+    description: "Service principal name for running the job (job execution runtime)"
+    # No default - must be set per environment
+  
+  # =========================================
+  # Azure Configuration
+  # =========================================
+
+  storage_account_name:
+    description: "Azure storage account name - dynamically constructed from bundle target"
+    default: "ctdp${bundle.target}datastore"
+  
+  monitoring_queue_name:
+    description: "Monitoring queue name"
+    default: "worker-monitoring"
+  
+  dbxload_queue_name:
+    description: "DBXLoad queue name"
+    default: "worker-dbxload"
+
+  meta_table_name:
+    description: "Meta table name"
+    default: "meta"
+  
+  # =========================================
+  # Unity Catalog / Volume Configuration
+  # =========================================
+
+  catalog_name:
+    description: "Unity Catalog name - dynamically constructed from bundle target"
+    default: "ctdp${bundle.target}dbxlakehouse"
+  
+  schema_name:
+    description: "Schema name for deployments"
+    # No default - must be set per environment
+  volume_name:
+    description: "Volume name for artifacts"
+    default: "pipeline"
+  
+  # =========================================
+  # Cluster Configuration
+  # =========================================
+  spark_version:
+    description: "Spark version for cluster"
+    default: "17.3.x-scala2.13"
+  
+  node_type:
+    description: "Node type for cluster"
+    default: "Standard_D4ds_v5"
+  
+  driver_node_type:
+    description: "Driver node type for cluster"
+    default: "Standard_D4ds_v5"
+  
+  min_workers:
+    description: "Minimum number of workers"
+    default: 1
+  
+  max_workers:
+    description: "Maximum number of workers"
+    default: 8
+  
+  cluster_policy_id:
+    description: "Cluster policy ID"
+    default: "0011ACBB23380934"
+  
+  # =========================================
+  # Job Runtime Configuration
+  # =========================================
+  azure_visibility_timeout_seconds:
+    description: "Azure queue visibility timeout in seconds"
+    default: 60
+  
+  azure_max_dequeue_count:
+    description: "Maximum number of times a message can be dequeued before being moved to poison queue"
+    default: 10
+  
+  azure_batch_receive_count:
+    description: "Number of messages to receive in a single batch"
+    default: 32
+  
+  azure_min_retry_delay_seconds:
+    description: "Minimum delay in seconds before retrying a failed operation"
+    default: 60
+  
+  load_strategy:
+    description: "Load strategy (OPTIMISTIC or SAFE)"
+    default: "OPTIMISTIC"
+  
+  job_max_runtime_seconds:
+    description: "Maximum runtime for the job in seconds"
+    default: 300
+  
+  item_queue_batch_poll_count:
+    description: "Number of times to poll the item queue in a batch"
+    default: 10
+  
+  item_queue_min_retry_delay_seconds:
+    description: "Minimum delay in seconds before retrying item queue operations"
+    default: 5
+  
+  # =========================================
+  # Task Configuration
+  # =========================================
+  for_each_concurrency:
+    description: "Concurrency level for LoadItemExecutor loop"
+    default: 4
+  
+  for_each_inputs:
+    description: "Input array for LoadItemExecutor loop - defines number of parallel executors"
+    default: "[1,2,3,4,5,6,7,8]"
+  
+  jar_version:
+    description: "Version of the JAR file to use"
+    default: "2.13-0.1.0"
+  
+  # =========================================
+  # Notification Configuration
+  # =========================================
+  notification_email:
+    description: "Email address for job failure notifications"
+    default: "dinesh.kamalakkannan@databricks.com"

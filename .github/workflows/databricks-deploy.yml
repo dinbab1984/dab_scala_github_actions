@@ -1,0 +1,107 @@
+name: Deploy to Dev
+
+on:
+  pull_request:
+    branches:
+      - main
+
+env:
+  DATABRICKS_CLI_VERSION: '0.276.0'
+  JAVA_VERSION: '17'
+
+jobs:
+  deploy-dev:
+    name: Deploy to Development
+    runs-on: ubuntu-latest
+    environment: dev
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: 'sbt'
+      
+      - name: Setup SBT credentials
+        run: |
+          mkdir -p ~/.sbt
+          echo 'realm=Artifactory Realm' > ~/.sbt/.credentials
+          echo "host=artifacts.ws.contitech.cloud" >> ~/.sbt/.credentials
+          echo "user=${{ secrets.ARTIFACTORY_USERNAME }}" >> ~/.sbt/.credentials
+          echo "password=${{ secrets.ARTIFACTORY_PASSWORD }}" >> ~/.sbt/.credentials
+      
+      - name: Check for uncommitted changes
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "ERROR: There are uncommitted changes in the working directory"
+            git status
+            exit 1
+          else
+            echo "SUCCESS: Git status is clean"
+          fi
+      
+      - name: Testing source (scalafixAll, clean, test)
+        run: |
+          echo "INFO: Testing source..."
+          sbt "scalafixAll;scalafixAll;clean;test"
+      
+      - name: Assemble JAR
+        run: |
+          echo "INFO: Assembling jar file..."
+          sbt "assembly"
+      
+      - name: Get version
+        id: version
+        run: |
+          VERSION=$(date +%Y%m%d-%H%M%S)-$(git rev-parse --short HEAD)
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "Building version: $VERSION"
+      
+      - name: Setup Databricks CLI
+        uses: databricks/setup-cli@main
+        with:
+          version: ${{ env.DATABRICKS_CLI_VERSION }}
+      
+      - name: Set environment variables
+        id: env_vars
+        run: |
+          TARGET="dev"
+          CATALOG_NAME="ctdp${TARGET}dbxlakehouse"
+          echo "TARGET=$TARGET" >> $GITHUB_OUTPUT
+          echo "CATALOG_NAME=$CATALOG_NAME" >> $GITHUB_OUTPUT
+          echo "Computed volume path: /Volumes/$CATALOG_NAME/${{ secrets.SCHEMA_NAME_DEV }}/pipeline"
+      
+      - name: Validate bundle for dev
+        run: |
+          databricks bundle validate -t ${{ steps.env_vars.outputs.TARGET }}
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
+          BUNDLE_VAR_run_as_sp: ${{ secrets.RUN_AS_SP_DEV }}
+          BUNDLE_VAR_schema_name: ${{ secrets.SCHEMA_NAME_DEV }}
+      
+      - name: Upload JAR to Databricks Volume
+        run: |
+          databricks fs cp \
+            target/scala-2.13/dp-lakehouse-dbxjob.jar \
+            dbfs:/Volumes/${{ steps.env_vars.outputs.CATALOG_NAME }}/${{ secrets.SCHEMA_NAME_DEV }}/pipeline/jars/dp-lakehouse-dbxjob-${{ steps.version.outputs.VERSION }}.jar \
+            --overwrite
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
+      
+      - name: Deploy bundle to dev
+        run: |
+          databricks bundle deploy -t ${{ steps.env_vars.outputs.TARGET }} \
+            --var="jar_version=${{ steps.version.outputs.VERSION }}"
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
+          BUNDLE_VAR_run_as_sp: ${{ secrets.RUN_AS_SP_DEV }}
+          BUNDLE_VAR_schema_name: ${{ secrets.SCHEMA_NAME_DEV }}

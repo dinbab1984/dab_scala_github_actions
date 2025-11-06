@@ -1,0 +1,90 @@
+.gitignore# Databricks
+.databricks/
+.databrickscfg
+databricks/.env
+*.lock.hcl
+
+# SBT
+target/
+project/target/
+project/project/
+lib_managed/
+src_managed/
+test-output/
+.scala_dependencies
+.worksheet
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Eclipse
+.project
+.settings/
+.classpath
+.cache
+.cache-main
+.cache-tests
+
+# VS Code
+.vscode/
+.metals/
+.bloop/
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Credentials
+.credentials
+.env
+*.pem
+*.key
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+*.swp
+*~
+
+# Build artifacts
+*.jar
+*.war
+*.ear
+*.class
+
+# Compiled source
+*.com
+*.dll
+*.exe
+*.o
+*.so
+
+# Archives
+*.7z
+*.dmg
+*.gz
+*.iso
+*.rar
+*.tar
+*.zip
+
+# Databricks specific
+metastore_db/
+derby.log
+spark-warehouse/
+tmp*/

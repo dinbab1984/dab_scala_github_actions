@@ -1,0 +1,201 @@
+# DBXLoad Job Configuration
+# This file defines the DBXLoad worker job with all its tasks
+
+resources:
+  jobs:
+    dbxload_worker:
+      name: "${bundle.target}-dbxload-worker"
+      
+      # Email notifications
+      email_notifications:
+        no_alert_for_skipped_runs: false
+        on_failure:
+          - "${var.notification_email}"
+      
+      webhook_notifications: {}
+      
+      # Job settings
+      timeout_seconds: 0
+      max_concurrent_runs: 1
+      
+      # Queue configuration
+      queue:
+        enabled: true
+      
+      # Run as service principal (runtime execution)
+      run_as:
+        service_principal_name: "${var.run_as_sp}"
+      
+      # Performance target
+      performance_target: STANDARD
+      
+      # Job parameters that can be overridden at runtime
+      parameters:
+        - name: stage
+          default: "${bundle.target}"
+        - name: credential_builder
+          default: "ClientSecret"
+      
+      # Job clusters
+      job_clusters:
+        - job_cluster_key: "${bundle.target}-dbxload"
+          new_cluster:
+            cluster_name: ""
+            spark_version: "${var.spark_version}"
+            
+            # Azure-specific configuration
+            azure_attributes:
+              availability: SPOT_WITH_FALLBACK_AZURE
+              spot_bid_max_price: 100
+            
+            node_type_id: "${var.node_type}"
+            driver_node_type_id: "${var.driver_node_type}"
+            policy_id: "${var.cluster_policy_id}"
+            
+            # Security settings
+            data_security_mode: SINGLE_USER
+            kind: CLASSIC_PREVIEW
+            is_single_node: false
+            
+            # Autoscaling
+            autoscale:
+              min_workers: ${var.min_workers}
+              max_workers: ${var.max_workers}
+            
+            # Spark configuration
+            spark_conf:
+              "spark.databricks.delta.preview.enabled": "true"
+              "spark.databricks.cluster.profile": "singleNode"
+      
+      # Tasks
+      tasks:
+        # Task 1: JobSetup
+        - task_key: JobSetup
+          run_if: ALL_SUCCESS
+          
+          spark_jar_task:
+            jar_uri: ""
+            main_class_name: "com.example.HelloWorld"
+            parameters:
+              - >-
+                {
+                  "clazz": "JobSetup",
+                  "name": "{{task.name}}",
+                  "runId": "{{task.run_id}}"
+                }
+              - "CredentialBuilder={{job.parameters.credential_builder}}"
+              - >-
+                SparkConfig={
+                  "clazz": "Lakehouse",
+                  "stage": "{{job.parameters.stage}}"
+                }
+              - "pipelineVolume=/Volumes/${var.catalog_name}/${var.schema_name}/${var.volume_name}/"
+              - >-
+                JobConfig={
+                  "monitoringQueue": {
+                    "storageAccountName": "${var.storage_account_name}",
+                    "queueName": "${var.monitoring_queue_name}"
+                  },
+                  "metaTable": {
+                    "storageAccountName": "${var.storage_account_name}",
+                    "tableName": "${var.meta_table_name}"
+                  },
+                  "dbxloadQueue": {
+                    "storageAccountName": "${var.storage_account_name}",
+                    "queueName": "${var.dbxload_queue_name}"
+                  },
+                  "azureVisibilityTimeoutSeconds": ${var.azure_visibility_timeout_seconds},
+                  "azureMaxDequeueCount": ${var.azure_max_dequeue_count},
+                  "azureBatchReceiveCount": ${var.azure_batch_receive_count},
+                  "azureMinRetryDelaySeconds": ${var.azure_min_retry_delay_seconds},
+                  "loadStrategy": "${var.load_strategy}",
+                  "jobMaxRuntimeSeconds": ${var.job_max_runtime_seconds},
+                  "itemQueueBatchPollCount": ${var.item_queue_batch_poll_count},
+                  "itemQueueMinRetryDelaySeconds": ${var.item_queue_min_retry_delay_seconds}
+                }
+            run_as_repl: true
+          
+          job_cluster_key: "${bundle.target}-dbxload"
+          
+          libraries:
+            - jar: "/Volumes/${var.catalog_name}/${var.schema_name}/${var.volume_name}/libs/scala-hello-world_${var.jar_version}.jar"
+          
+          timeout_seconds: 0
+          email_notifications: {}
+          webhook_notifications: {}
+        
+        # Task 2: LoadItemProducer
+        - task_key: LoadItemProducer
+          depends_on:
+            - task_key: JobSetup
+          
+          run_if: ALL_SUCCESS
+          
+          spark_jar_task:
+            jar_uri: ""
+            main_class_name: "com.example.HelloWorld"
+            parameters:
+              - >-
+                {
+                  "clazz": "LoadItemProducer",
+                  "name": "{{task.name}}",
+                  "runId": "{{task.run_id}}"
+                }
+            run_as_repl: true
+          
+          job_cluster_key: "${bundle.target}-dbxload"
+          
+          libraries:
+            - jar: "/Volumes/${var.catalog_name}/${var.schema_name}/${var.volume_name}/libs/scala-hello-world_${var.jar_version}.jar"
+          
+          timeout_seconds: 0
+          email_notifications: {}
+          webhook_notifications: {}
+        
+        # Task 3: LoadItemExecutor_Loop (with for_each)
+        - task_key: LoadItemExecutor_Loop
+          depends_on:
+            - task_key: JobSetup
+          
+          run_if: ALL_SUCCESS
+          
+          for_each_task:
+            inputs: "${var.for_each_inputs}"
+            concurrency: ${var.for_each_concurrency}
+            
+            task:
+              task_key: LoadItemExecutor
+              run_if: ALL_SUCCESS
+              
+              spark_jar_task:
+                jar_uri: ""
+                main_class_name: "com.example.HelloWorld"
+                parameters:
+                  - >-
+                    {
+                      "clazz": "LoadItemExecutor",
+                      "name": "{{task.name}}_{{input}}",
+                      "runId": "{{task.run_id}}"
+                    }
+                run_as_repl: true
+              
+              job_cluster_key: "${bundle.target}-dbxload"
+              
+              libraries:
+               - jar: "/Volumes/${var.catalog_name}/${var.schema_name}/${var.volume_name}/libs/scala-hello-world_${var.jar_version}.jar"
+              
+              timeout_seconds: 0
+              email_notifications: {}
+              webhook_notifications: {}
+          
+          timeout_seconds: 0
+          email_notifications: {}
+          webhook_notifications: {}
+      
+      # Job-level tags
+      tags:
+        environment: "${bundle.target}"
+        project: "ct-dbx-load"
+        managed_by: "databricks-asset-bundles"
+        cost_center: "data-platform"
+

@@ -1,0 +1,52 @@
+# Environment Targets Configuration
+# Defines environment-specific configurations for dev, qual, and prod
+# Environment-specific variables are provided via environment variables
+
+targets:
+  # =========================================
+  # Development Environment
+  # =========================================
+  dev:
+    mode: development
+    default: true
+    
+    workspace:
+      host: ${DATABRICKS_HOST}
+      root_path: "~/.bundle/${bundle.name}/${bundle.target}"
+    
+    variables:
+      run_as_sp: "sp-dev-runtime"
+      schema_name: "deployments"
+
+  # =========================================
+  # Qualification/Staging Environment
+  # =========================================
+  qual:
+    mode: production
+    
+    workspace:
+      host: ${DATABRICKS_HOST}
+      root_path: "/.bundle/${bundle.name}/${bundle.target}"
+    
+    variables:
+      run_as_sp: "sp-qual-runtime"
+      schema_name: "deployments"
+
+  # =========================================
+  # Production Environment
+  # =========================================
+  prod:
+    mode: production
+    
+    workspace:
+      host: ${DATABRICKS_HOST}
+      root_path: "/.bundle/${bundle.name}/${bundle.target}"
+    
+    variables:
+      run_as_sp: "sp-prod-runtime"
+      schema_name: "deployments"
+      
+      # Production-specific scaling overrides
+      max_workers: 16
+      for_each_concurrency: 8
+      for_each_inputs: "[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]"

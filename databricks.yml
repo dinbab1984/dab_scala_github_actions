@@ -1,0 +1,18 @@
+# Databricks Asset Bundle Configuration
+# Main configuration file - includes other configuration files for better organization
+
+bundle:
+  name: samples-bundle
+
+# Include configuration files
+include:
+  - databricks/variables.yml
+  - databricks/targets.yml
+  - databricks/resources/*.yml
+
+# Artifacts configuration (tobe revised)
+#artifacts:
+#  dbxload_jar:
+#    type: jar
+#    path: ./libs/_6_lakehouseDBXJob/target/scala-2.13/lakehouse-dbx-job_*.jar
+#    build: sbt "project lakehouseDBXJob" clean package
