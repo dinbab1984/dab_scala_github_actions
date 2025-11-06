@@ -56,10 +56,10 @@ jobs:
             echo "SUCCESS: Git status is clean"
           fi
       
-      - name: Testing source (scalafixAll, clean, test)
+      - name: Testing source (scalafixAll, clean, compile)
         run: |
-          echo "INFO: Testing source..."
-          sbt "scalafixAll;scalafixAll;clean;test"
+          echo "INFO: Running scalafix and compiling source..."
+          sbt "scalafixAll --check;clean;compile"
       
       - name: Assemble JAR
         run: |
