@@ -53,7 +53,7 @@ resources:
             policy_id: "${var.cluster_policy_id}"
             
             # Security settings
-            data_security_mode: SINGLE_USER
+            data_security_mode: USER_ISOLATION
             kind: CLASSIC_PREVIEW
             is_single_node: false
             
