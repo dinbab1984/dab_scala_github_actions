@@ -1,0 +1,962 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO" packages="com.databricks.logging.log4j" shutdownHook="disable">
+  <Appenders>
+    <Console name="console" target="SYSTEM_ERR">
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %p %c - %m%n"/>
+    </Console>
+    <Rewrite name="console.rewrite">
+      <ServiceRewriteAppender/>
+      <AppenderRef ref="console"/>
+    </Rewrite>
+    <RollingFile name="com.databricks.UsageLogging.appender" fileName="logs/usage.json" filePattern="logs/%d{yyyy-MM-dd-HH}.usage.json.gz" immediateFlush="true" bufferedIO="false" bufferSize="8192" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.usage.json.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.EventLoggingStats.appender" fileName="logs/logger-registry.json" filePattern="logs/%d{yyyy-MM-dd-HH}.logger-registry.json.gz" immediateFlush="true" bufferedIO="false" bufferSize="8192" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.logger-registry.json.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.ObjectStorageLibraryLog.appender" fileName="logs/ObjectStorageLibraryLog.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.ObjectStorageLibraryLog.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.CmvOneEventDetailLaMigration.appender" fileName="logs/CmvOneEventDetailLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.CmvOneEventDetailLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.Span.appender" fileName="logs/Span.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.Span.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.ObjectStorageLibraryLogLaMigration.appender" fileName="logs/ObjectStorageLibraryLogLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.ObjectStorageLibraryLogLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.ServiceRequestLogLaMigration.appender" fileName="logs/ServiceRequestLogLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.ServiceRequestLogLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.DbrActivityLogHighVolumeLaMigration.appender" fileName="logs/DbrActivityLogHighVolumeLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.DbrActivityLogHighVolumeLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.AuditLogLaMigration.appender" fileName="logs/AuditLogLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.AuditLogLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.IngestionEvent.appender" fileName="logs/IngestionEvent.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.IngestionEvent.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.ServiceHealthEventLaMigration.appender" fileName="logs/ServiceHealthEventLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.ServiceHealthEventLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.DbrActivityLogHighVolume.appender" fileName="logs/DbrActivityLogHighVolume.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.DbrActivityLogHighVolume.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.ProductEventLogLaMigration.appender" fileName="logs/ProductEventLogLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.ProductEventLogLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.ApplicationMetaLogLaMigration.appender" fileName="logs/ApplicationMetaLogLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.ApplicationMetaLogLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.DbrLogLaMigration.appender" fileName="logs/DbrLogLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.DbrLogLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.DpHmrNonQueryEvent.appender" fileName="logs/DpHmrNonQueryEvent.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.DpHmrNonQueryEvent.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.LumberjackLineageEvent.appender" fileName="logs/LumberjackLineageEvent.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.LumberjackLineageEvent.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.EventplatformTimeseriesLog.appender" fileName="logs/EventplatformTimeseriesLog.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.EventplatformTimeseriesLog.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.DbrErrorLog.appender" fileName="logs/DbrErrorLog.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.DbrErrorLog.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.QueryProfileLog.appender" fileName="logs/QueryProfileLog.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.QueryProfileLog.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.SparkConnectRpcMetricsLogLaMigration.appender" fileName="logs/SparkConnectRpcMetricsLogLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.SparkConnectRpcMetricsLogLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.EncryptionEventLog.appender" fileName="logs/EncryptionEventLog.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.EncryptionEventLog.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.DbrErrorLogLaMigration.appender" fileName="logs/DbrErrorLogLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.DbrErrorLogLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.ClassicDpMetricsLog.appender" fileName="logs/ClassicDpMetricsLog.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.ClassicDpMetricsLog.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.ClassicDpMetricsLogLaMigration.appender" fileName="logs/ClassicDpMetricsLogLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.ClassicDpMetricsLogLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.SparkConnectRpcMetricsLog.appender" fileName="logs/SparkConnectRpcMetricsLog.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.SparkConnectRpcMetricsLog.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.RequestActivityLogLaMigration.appender" fileName="logs/RequestActivityLogLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.RequestActivityLogLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.CachingTeamLog.appender" fileName="logs/CachingTeamLog.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.CachingTeamLog.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.CachingTeamLogLaMigration.appender" fileName="logs/CachingTeamLogLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.CachingTeamLogLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.PrometheusMetricsSnapshotLaMigration.appender" fileName="logs/PrometheusMetricsSnapshotLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.PrometheusMetricsSnapshotLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.EncryptionEventLogLaMigration.appender" fileName="logs/EncryptionEventLogLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.EncryptionEventLogLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.AuditLog.appender" fileName="logs/AuditLog.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.AuditLog.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.SpanLaMigration.appender" fileName="logs/SpanLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.SpanLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.PipelineEventLaMigration.appender" fileName="logs/PipelineEventLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.PipelineEventLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.ServiceRequestLog.appender" fileName="logs/ServiceRequestLog.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.ServiceRequestLog.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.NimbusEventLogLaMigration.appender" fileName="logs/NimbusEventLogLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.NimbusEventLogLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.AiProductsEventLogLaMigration.appender" fileName="logs/AiProductsEventLogLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.AiProductsEventLogLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.DbrActivityLog.appender" fileName="logs/DbrActivityLog.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.DbrActivityLog.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.RequestActivityLog.appender" fileName="logs/RequestActivityLog.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.RequestActivityLog.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.DpHmrNonQueryEventLaMigration.appender" fileName="logs/DpHmrNonQueryEventLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.DpHmrNonQueryEventLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.PipelineEvent.appender" fileName="logs/PipelineEvent.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.PipelineEvent.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.CmvOneEventLog.appender" fileName="logs/CmvOneEventLog.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.CmvOneEventLog.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.DbrLog.appender" fileName="logs/DbrLog.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.DbrLog.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.NimbusDomainPoolSnapshotLogLaMigration.appender" fileName="logs/NimbusDomainPoolSnapshotLogLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.NimbusDomainPoolSnapshotLogLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.CmvOneEventLogLaMigration.appender" fileName="logs/CmvOneEventLogLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.CmvOneEventLogLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.ApplicationMetaLog.appender" fileName="logs/ApplicationMetaLog.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.ApplicationMetaLog.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.DbrActivityLogLaMigration.appender" fileName="logs/DbrActivityLogLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.DbrActivityLogLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.ServiceHealthEvent.appender" fileName="logs/ServiceHealthEvent.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.ServiceHealthEvent.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.ServerlessSlotBasedBillingLog.appender" fileName="logs/ServerlessSlotBasedBillingLog.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.ServerlessSlotBasedBillingLog.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.PrometheusMetricsSnapshot.appender" fileName="logs/PrometheusMetricsSnapshot.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.PrometheusMetricsSnapshot.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.QueryProfileLogLaMigration.appender" fileName="logs/QueryProfileLogLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.QueryProfileLogLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.NimbusDomainPoolSnapshotLog.appender" fileName="logs/NimbusDomainPoolSnapshotLog.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.NimbusDomainPoolSnapshotLog.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.ProductEventLog.appender" fileName="logs/ProductEventLog.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.ProductEventLog.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.NimbusEventLog.appender" fileName="logs/NimbusEventLog.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.NimbusEventLog.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.AppStateLog.appender" fileName="logs/AppStateLog.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.AppStateLog.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.AiProductsEventLog.appender" fileName="logs/AiProductsEventLog.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.AiProductsEventLog.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.IngestionEventLaMigration.appender" fileName="logs/IngestionEventLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.IngestionEventLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.AppStateLogLaMigration.appender" fileName="logs/AppStateLogLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.AppStateLogLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.BackgroundActivityLogLaMigration.appender" fileName="logs/BackgroundActivityLogLaMigration.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.BackgroundActivityLogLaMigration.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.CmvOneEventDetail.appender" fileName="logs/CmvOneEventDetail.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.CmvOneEventDetail.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+    <RollingFile name="com.databricks.logging.structured.BackgroundActivityLog.appender" fileName="logs/BackgroundActivityLog.pb.base64" filePattern="logs/%d{yyyy-MM-dd-HH}.BackgroundActivityLog.pb.base64.gz" bufferedIO="false" immediateFlush="true" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.pb.base64.gz"/>
+          <IfLastModified age="P24H"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex"/>
+    </RollingFile>
+
+    <Console name="task.ui.console.always" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %p %c - %m%n"/>
+    </Console>
+    <Console name="task.ui.console.info" target="SYSTEM_OUT">
+      <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5p %c - %m%n"/>
+    </Console>
+    <Console name="task.ui.console.warn" target="SYSTEM_OUT">
+      <ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5p %c - %m%n"/>
+    </Console>
+    <Console name="task.ui.console.error" target="SYSTEM_ERR">
+      <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5p %c - %m%n"/>
+    </Console>
+  </Appenders>
+  <Loggers>
+    <Logger name="org.apache.spark.rdd.NewHadoopRDD" level="WARN"/>
+    <Logger name="com.microsoft.azure.datalake.store" level="DEBUG"/>
+    <Logger name="com.microsoft.azure.datalake.store.HttpTransport" level="DEBUG">
+      <RegexFilter onMatch="DENY" onMismatch="NEUTRAL" regex=".*HTTPRequest,Succeeded.*"/>
+    </Logger>
+    <Logger name="com.microsoft.azure.datalake.store.HttpTransport.tokens" level="DEBUG"/>
+    <Logger name="com.databricks.UsageLogging" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.UsageLogging.appender"/>
+    </Logger>
+    <Logger name="com.databricks.EventLoggingStats" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.EventLoggingStats.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.ObjectStorageLibraryLog" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.ObjectStorageLibraryLog.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.CmvOneEventDetailLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.CmvOneEventDetailLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.Span" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.Span.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.ObjectStorageLibraryLogLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.ObjectStorageLibraryLogLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.ServiceRequestLogLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.ServiceRequestLogLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.DbrActivityLogHighVolumeLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.DbrActivityLogHighVolumeLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.AuditLogLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.AuditLogLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.IngestionEvent" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.IngestionEvent.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.ServiceHealthEventLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.ServiceHealthEventLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.DbrActivityLogHighVolume" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.DbrActivityLogHighVolume.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.ProductEventLogLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.ProductEventLogLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.ApplicationMetaLogLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.ApplicationMetaLogLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.DbrLogLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.DbrLogLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.DpHmrNonQueryEvent" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.DpHmrNonQueryEvent.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.LumberjackLineageEvent" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.LumberjackLineageEvent.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.EventplatformTimeseriesLog" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.EventplatformTimeseriesLog.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.DbrErrorLog" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.DbrErrorLog.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.QueryProfileLog" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.QueryProfileLog.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.SparkConnectRpcMetricsLogLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.SparkConnectRpcMetricsLogLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.EncryptionEventLog" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.EncryptionEventLog.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.DbrErrorLogLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.DbrErrorLogLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.ClassicDpMetricsLog" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.ClassicDpMetricsLog.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.ClassicDpMetricsLogLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.ClassicDpMetricsLogLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.SparkConnectRpcMetricsLog" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.SparkConnectRpcMetricsLog.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.RequestActivityLogLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.RequestActivityLogLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.CachingTeamLog" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.CachingTeamLog.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.CachingTeamLogLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.CachingTeamLogLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.PrometheusMetricsSnapshotLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.PrometheusMetricsSnapshotLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.EncryptionEventLogLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.EncryptionEventLogLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.AuditLog" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.AuditLog.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.SpanLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.SpanLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.PipelineEventLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.PipelineEventLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.ServiceRequestLog" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.ServiceRequestLog.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.NimbusEventLogLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.NimbusEventLogLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.AiProductsEventLogLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.AiProductsEventLogLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.DbrActivityLog" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.DbrActivityLog.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.RequestActivityLog" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.RequestActivityLog.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.DpHmrNonQueryEventLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.DpHmrNonQueryEventLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.PipelineEvent" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.PipelineEvent.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.CmvOneEventLog" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.CmvOneEventLog.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.DbrLog" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.DbrLog.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.NimbusDomainPoolSnapshotLogLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.NimbusDomainPoolSnapshotLogLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.CmvOneEventLogLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.CmvOneEventLogLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.ApplicationMetaLog" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.ApplicationMetaLog.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.DbrActivityLogLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.DbrActivityLogLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.ServiceHealthEvent" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.ServiceHealthEvent.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.ServerlessSlotBasedBillingLog" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.ServerlessSlotBasedBillingLog.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.PrometheusMetricsSnapshot" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.PrometheusMetricsSnapshot.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.QueryProfileLogLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.QueryProfileLogLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.NimbusDomainPoolSnapshotLog" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.NimbusDomainPoolSnapshotLog.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.ProductEventLog" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.ProductEventLog.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.NimbusEventLog" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.NimbusEventLog.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.AppStateLog" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.AppStateLog.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.AiProductsEventLog" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.AiProductsEventLog.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.IngestionEventLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.IngestionEventLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.AppStateLogLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.AppStateLogLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.BackgroundActivityLogLaMigration" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.BackgroundActivityLogLaMigration.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.CmvOneEventDetail" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.CmvOneEventDetail.appender"/>
+    </Logger>
+    <Logger name="com.databricks.logging.structured.BackgroundActivityLog" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.logging.structured.BackgroundActivityLog.appender"/>
+    </Logger>
+    <Logger name="com.example" level="INFO"/>
+    <Logger name="com.example.HelloWorld$" level="DEBUG" additivity="false">
+      <AppenderRef ref="console.rewrite"/>
+      <AppenderRef ref="task.ui.console.always"/>
+    </Logger>
+    <Root level="INFO">
+      <AppenderRef ref="console.rewrite"/>
+    </Root>
+  </Loggers>
+</Configuration>
+
+
+
