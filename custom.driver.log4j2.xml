@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO" packages="com.databricks.logging.log4j" shutdownHook="disable">
+  <Appenders>
+    <RollingFile name="publicFile.rolling" fileName="logs/log4j-active.log"
+      filePattern="logs/log4j-%d{yyyy-MM-dd-HH}.log.gz" immediateFlush="true" bufferedIO="false"
+      bufferSize="8192" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+      </Policies>
+
+      <!-- Replace original pattern -->
+      <!-- <PatternLayout pattern="%d{yy/MM/dd HH:mm:ss} %p %c{1}: %m%n%ex"/> -->
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %p %c - %m%n" />
+
+    </RollingFile>
+    <Rewrite name="publicFile.rolling.rewrite">
+      <ServiceRewriteAppender />
+      <AppenderRef ref="publicFile.rolling" />
+    </Rewrite>
+    <RollingFile name="privateFile.rolling" fileName="logs/active.log"
+      filePattern="logs/%d{yyyy-MM-dd-HH}.log.gz" immediateFlush="true" bufferedIO="false"
+      bufferSize="8192" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+      </Policies>
+
+      <!-- Replace original pattern -->
+      <!-- <PatternLayout pattern="%d{yy/MM/dd HH:mm:ss} %p %c{1}: %m%n%ex"/> -->
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %p %c - %m%n" />
+
+    </RollingFile>
+    <Rewrite name="privateFile.rolling.rewrite">
+      <ServiceRewriteAppender />
+      <AppenderRef ref="privateFile.rolling" />
+    </Rewrite>
+    <RollingFile name="com.databricks.UsageLogging.appender" fileName="logs/usage.json"
+      filePattern="logs/%d{yyyy-MM-dd-HH}.usage.json.gz" immediateFlush="true" bufferedIO="false"
+      bufferSize="8192" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.usage.json.gz" />
+          <IfLastModified age="P24H" />
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex" />
+    </RollingFile>
+    <RollingFile name="com.databricks.EventLoggingStats.appender"
+      fileName="logs/logger-registry.json"
+      filePattern="logs/%d{yyyy-MM-dd-HH}.logger-registry.json.gz" immediateFlush="true"
+      bufferedIO="false" bufferSize="8192" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.logger-registry.json.gz" />
+          <IfLastModified age="P24H" />
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex" />
+    </RollingFile>
+    <RollingFile name="com.databricks.ProductLogging.appender" fileName="logs/product.json"
+      filePattern="logs/%d{yyyy-MM-dd-HH}.product.json.gz" immediateFlush="true" bufferedIO="false"
+      bufferSize="8192" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.product.json.gz" />
+          <IfLastModified age="P24H" />
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex" />
+    </RollingFile>
+    <RollingFile name="com.databricks.LineageLogging.appender" fileName="logs/lineage.json"
+      filePattern="logs/%d{yyyy-MM-dd-HH}.lineage.json.gz" immediateFlush="true" bufferedIO="false"
+      bufferSize="8192" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.lineage.json.gz" />
+          <IfLastModified age="P24H" />
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex" />
+    </RollingFile>
+    <RollingFile name="com.databricks.MetricsLogging.appender" fileName="logs/metrics.json"
+      filePattern="logs/%d{yyyy-MM-dd-HH}.metrics.json.gz" immediateFlush="true" bufferedIO="false"
+      bufferSize="8192" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs" maxDepth="1">
+          <IfFileName glob="*.metrics.json.gz" />
+          <IfLastModified age="P24H" />
+        </Delete>
+      </DefaultRolloverStrategy>
+      <PatternLayout pattern="%m%n%ex" />
+    </RollingFile>
+    <RollingFile name="dltExecution.rolling" fileName="logs/dlt-execution.log"
+      filePattern="logs/dlt-execution-%d{yyyy-MM-dd-HH}.log.gz" immediateFlush="true"
+      bufferedIO="false" bufferSize="8192" createOnDemand="true">
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+      </Policies>
+      <PatternLayout pattern="%d{yy/MM/dd HH:mm:ss} %p %c{1}: %m%n%ex" />
+    </RollingFile>
+    <Rewrite name="dltExecution.rolling.rewrite">
+      <ServiceRewriteAppender />
+      <AppenderRef ref="dltExecution.rolling" />
+    </Rewrite>
+
+    <!-- Additional Appender -->
+    <Console name="task.ui.console.always" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %p %c - %m%n" />
+    </Console>
+    <Console name="task.ui.console.info" target="SYSTEM_OUT">
+      <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY" />
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5p %c - %m%n" />
+    </Console>
+    <Console name="task.ui.console.warn" target="SYSTEM_OUT">
+      <ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY" />
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5p %c - %m%n" />
+    </Console>
+    <Console name="task.ui.console.error" target="SYSTEM_ERR">
+      <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY" />
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5p %c - %m%n" />
+    </Console>
+  </Appenders>
+  <Loggers>
+    <Root level="INFO">
+      <AppenderRef ref="publicFile.rolling.rewrite" />
+    </Root>
+    <Logger name="privateLog" level="INFO" additivity="false">
+      <AppenderRef ref="privateFile.rolling.rewrite" />
+    </Logger>
+    <Logger name="com.databricks.UsageLogging" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.UsageLogging.appender" />
+    </Logger>
+    <Logger name="com.databricks.EventLoggingStats" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.EventLoggingStats.appender" />
+    </Logger>
+    <Logger name="com.databricks.ProductLogging" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.ProductLogging.appender" />
+    </Logger>
+    <Logger name="com.databricks.LineageLogging" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.LineageLogging.appender" />
+    </Logger>
+    <Logger name="com.databricks.MetricsLogging" level="INFO" additivity="false">
+      <AppenderRef ref="com.databricks.MetricsLogging.appender" />
+    </Logger>
+    <Logger name="com.databricks.pipelines" level="INFO" additivity="true">
+      <AppenderRef ref="dltExecution.rolling.rewrite" />
+    </Logger>
+    <Logger name="org.apache.spark.rdd.NewHadoopRDD" level="WARN" />
+    <Logger name="com.microsoft.azure.datalake.store" level="DEBUG" />
+    <Logger name="com.microsoft.azure.datalake.store.HttpTransport" level="DEBUG">
+      <RegexFilter onMatch="DENY" onMismatch="NEUTRAL" regex=".*HTTPRequest,Succeeded.*" />
+    </Logger>
+    <Logger name="com.microsoft.azure.datalake.store.HttpTransport.tokens" level="DEBUG" />
+
+
+    <Logger name="com.example" level="INFO" />
+    <Logger name="com.example.HelloWorld$" level="DEBUG" additivity="false">
+      <AppenderRef ref="publicFile.rolling.rewrite" />
+      <AppenderRef ref="task.ui.console.always" />
+    </Logger>
+  </Loggers>
+</Configuration>
