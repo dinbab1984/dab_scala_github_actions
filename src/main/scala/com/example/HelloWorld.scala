@@ -1,14 +1,13 @@
 package com.example
 
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.core.LoggerContext
 import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilderFactory
+import org.apache.logging.log4j.{Level, LogManager}
 
 object HelloWorld {
   private lazy val logger = LogManager.getLogger(getClass)
 
-  private def configureConsoleLogging(level: Level = Level.INFO): Unit = {
+  private def configureConsoleLogging(level: Level = Level.DEBUG): Unit = {
     val builder = ConfigurationBuilderFactory.newConfigurationBuilder()
     builder.setStatusLevel(Level.ERROR)
     builder.setConfigurationName("ProgrammaticConsoleConfig")
@@ -31,7 +30,7 @@ object HelloWorld {
   }
 
   def main(args: Array[String]): Unit = {
-    configureConsoleLogging(Level.DEBUG)
+    configureConsoleLogging()
     logger.info("Hello, World!")
     logger.debug("This is a debug message")
     logger.warn("This is a warning message")
